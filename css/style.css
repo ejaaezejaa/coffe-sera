@@ -1,0 +1,542 @@
+/* ===== Palet warna kopi =====
+   Ubah warna di sini, seluruh web ikut berubah. */
+:root {
+    --espresso: #2b1a10;   /* paling gelap: footer, teks utama */
+    --mocha:    #5a3825;   /* coklat sedang: judul, tombol */
+    --caramel:  #c68b59;   /* aksen hangat */
+    --latte:    #ead9c3;   /* krem tua: latar kotak */
+    --cream:    #fbf3e7;   /* latar halaman */
+    --foam:     #fffaf2;   /* kartu */
+    --danger:   #a63d2f;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: var(--espresso);
+    line-height: 1.6;
+    /* Latar krem dengan pola titik halus seperti biji kopi */
+    background-color: var(--cream);
+    background-image: radial-gradient(rgba(198, 139, 89, 0.15) 1.5px, transparent 1.5px);
+    background-size: 26px 26px;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: var(--mocha);
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+    line-height: 1.2;
+    color: var(--mocha);
+}
+
+/* Garis kecil karamel di bawah judul bagian */
+.section h2::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 4px;
+    margin-top: 8px;
+    border-radius: 2px;
+    background: var(--caramel);
+}
+
+.center {
+    text-align: center;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 40px;
+    background: var(--foam);
+    border-bottom: 3px solid var(--caramel);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo img {
+    height: 55px;
+}
+
+.navbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    align-items: center;
+}
+
+.navbar nav a {
+    text-decoration: none;
+    color: var(--espresso);
+    font-weight: bold;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+    color: var(--caramel);
+    border-bottom-color: var(--caramel);
+}
+
+.badge {
+    background: var(--mocha);
+    color: var(--foam);
+    border-radius: 50%;
+    padding: 1px 7px;
+    font-size: 12px;
+}
+
+/* ===== Hero (banner besar dengan slider) ===== */
+.hero {
+    position: relative;
+    height: 540px;
+    margin: 24px 40px;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--espresso);
+}
+
+/* Setiap slide menutupi seluruh banner, hanya yang .active terlihat */
+.slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px);          /* foto aslinya kecil, blur tipis membuatnya tetap halus */
+    transform: scale(1.06);     /* diperbesar sedikit supaya tepi blur tidak kelihatan */
+    opacity: 0;
+    transition: opacity 0.8s;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+/* Lapisan coklat di atas foto supaya teks putih mudah dibaca */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(160deg, rgba(43, 26, 16, 0.55), rgba(90, 56, 37, 0.8));
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 560px;
+    padding: 20px;
+    color: var(--foam);
+}
+
+.hero-content h1 {
+    color: var(--foam);
+    font-size: 40px;
+}
+
+.hero-logo {
+    height: 110px;
+    margin: 0 auto 18px;
+    padding: 10px 24px;
+    background: var(--foam);
+    border-radius: 20px;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 250, 242, 0.85);
+    color: var(--mocha);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.arrow:hover {
+    background: var(--caramel);
+    color: var(--foam);
+}
+
+.arrow.prev { left: 20px; }
+.arrow.next { right: 20px; }
+
+/* ===== Strip angka ===== */
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    padding: 26px 20px;
+    text-align: center;
+    color: var(--foam);
+    background: linear-gradient(90deg, var(--espresso), var(--mocha), var(--espresso));
+}
+
+.stats strong {
+    display: block;
+    font-size: 32px;
+    color: var(--caramel);
+}
+
+/* ===== Bagian halaman ===== */
+.section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.narrow {
+    max-width: 640px;
+}
+
+/* Dua kolom: teks + gambar/form */
+.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: center;
+}
+
+.split.top {
+    align-items: start;
+}
+
+.split img {
+    border-radius: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 24px;
+}
+
+.grid.three {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ===== Kartu menu ===== */
+.card {
+    background: var(--foam);
+    border-radius: 20px;
+    overflow: hidden;
+    border-top: 5px solid var(--caramel);
+    box-shadow: 0 4px 14px rgba(43, 26, 16, 0.1);
+}
+
+.card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 16px;
+}
+
+.desc {
+    font-size: 14px;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--caramel);
+}
+
+/* Kotak informasi (checkout, about, contact) */
+.box {
+    background: var(--latte);
+    border-left: 5px solid var(--caramel);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 6px 0;
+}
+
+/* ===== Tombol ===== */
+.btn {
+    display: inline-block;
+    padding: 10px 24px;
+    border: 2px solid var(--caramel);
+    border-radius: 30px;
+    background: var(--caramel);
+    color: var(--espresso);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: var(--mocha);
+    border-color: var(--mocha);
+    color: var(--foam);
+}
+
+.btn.small {
+    padding: 6px 16px;
+    font-size: 14px;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--mocha);
+}
+
+.link-btn {
+    border: none;
+    background: none;
+    color: var(--danger);
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* ===== Filter menu ===== */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.filters a {
+    padding: 6px 20px;
+    border: 2px solid var(--caramel);
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.filters a:hover,
+.filters a.active {
+    background: var(--caramel);
+    color: var(--espresso);
+}
+
+/* ===== Form ===== */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form input[type=text],
+.form input[type=email],
+.form textarea {
+    padding: 11px;
+    border: 2px solid var(--latte);
+    border-radius: 12px;
+    background: var(--foam);
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.form input:focus,
+.form textarea:focus {
+    outline: none;
+    border-color: var(--caramel);
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Pesan sukses / error */
+.alert {
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #e3efd9;
+    color: #2f5a1c;
+}
+
+.alert.error {
+    background: #f6dcd7;
+    color: var(--danger);
+}
+
+/* ===== Tabel keranjang ===== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    background: var(--foam);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.table th {
+    background: var(--mocha);
+    color: var(--foam);
+    text-align: left;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--latte);
+}
+
+.qty {
+    width: 70px;
+    padding: 6px;
+    border: 2px solid var(--latte);
+    border-radius: 8px;
+    font-family: inherit;
+}
+
+.total {
+    font-size: 20px;
+}
+
+/* ===== Rating & ulasan ===== */
+.rating {
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+
+.stars {
+    color: var(--caramel);
+    letter-spacing: 2px;
+}
+
+/* Satu kartu per menu yang dibeli */
+.review-item {
+    background: var(--foam);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+.review-name {
+    margin: 0;
+    font-weight: 600;
+    color: var(--mocha);
+}
+
+.hint {
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: var(--mocha);
+    opacity: 0.7;
+}
+
+.review-item textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+/* Bintang yang bisa diklik.
+   Di HTML urutannya 5, 4, 3, 2, 1. Dengan row-reverse, tampilannya jadi 1 sampai 5 dari kiri ke kanan.
+   Aturan "~" di CSS hanya bisa menyalakan elemen SETELAH yang diklik, dan setelah dalam HTML berarti
+   bintang di sebelah KIRI di layar. Itu sebabnya urutan HTML dibalik. */
+.star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 6px;
+    margin: 6px 0;
+}
+
+/* Bulatan radio disembunyikan, tapi tetap bisa dipakai lewat keyboard */
+.star-input input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.star-input label {
+    font-size: 40px;
+    line-height: 1;
+    color: #d8c7b0;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+}
+
+.star-input label:hover {
+    transform: scale(1.15);
+}
+
+.star-input input:checked ~ label,
+.star-input label:hover,
+.star-input label:hover ~ label {
+    color: var(--caramel);
+}
+
+.star-input input:focus-visible + label {
+    outline: 2px solid var(--caramel);
+    border-radius: 6px;
+}
+
+/* ===== Peta ===== */
+.map {
+    width: 100%;
+    height: 360px;
+    border: 0;
+    border-radius: 20px;
+}
+
+/* ===== Footer ===== */
+.footer {
+    margin-top: 40px;
+    padding: 24px;
+    text-align: center;
+    color: var(--latte);
+    background: var(--espresso);
+    border-top: 4px solid var(--caramel);
+}
+
+.footer p {
+    margin: 4px 0;
+}
+
+/* ===== HP / layar kecil ===== */
+@media (max-width: 760px) {
+    .navbar { padding: 8px 16px; }
+    .navbar nav { gap: 14px; font-size: 14px; }
+
+    .hero { height: 460px; margin: 16px; }
+    .hero-content h1 { font-size: 28px; }
+    .hero-logo { height: 80px; }
+    .arrow { width: 38px; height: 38px; font-size: 22px; }
+
+    .stats { gap: 30px; }
+    .split { grid-template-columns: 1fr; }
+    .table { font-size: 14px; }
+}
