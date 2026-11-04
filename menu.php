@@ -8,7 +8,7 @@ $cat = $_GET['cat'] ?? 'all';
 $products = get_products($pdo, $cat);
 
 $reviews = $pdo->query(
-    "SELECT r.rating, r.comment, p.name AS product, o.customer_name
+    "SELECT r.rating, r.comment, r.show_name, p.name AS product, o.customer_name
      FROM reviews r
      JOIN products p ON p.id = r.product_id
      JOIN orders o ON o.id = r.order_id
@@ -38,7 +38,7 @@ require 'includes/header.php';
             <div class="card">
                 <img src="images/<?= e($p['image']) ?>" alt="<?= e($p['name']) ?>">
                 <div class="card-body">
-                    <h3><?= e($p['name']) ?></h3>
+                    <h3><a href="product.php?id=<?= $p['id'] ?>" class="card-link"><?= e($p['name']) ?></a></h3>
                     <p class="desc"><?= e($p['description']) ?></p>
                     <p class="price"><?= rupiah($p['price']) ?></p>
                     <?= rating_line($p['avg_rating'], $p['review_count']) ?>
@@ -65,7 +65,7 @@ require 'includes/header.php';
             <span class="stars"><?= stars($r['rating']) ?></span>
             <strong><?= e($r['product']) ?></strong>
             <p><?= e($r['comment']) ?></p>
-            <small>- <?= e(explode(' ', trim($r['customer_name']))[0]) ?></small>
+            <small>- <?= e(review_name($r['customer_name'], $r['show_name'])) ?></small>
         </div>
     <?php endforeach; ?>
 </section>
