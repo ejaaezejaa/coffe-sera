@@ -15,22 +15,14 @@ $methods = [
     'cod'      => 'Bayar di Kasir (Cash)',
 ];
 
-$ids = array_keys($_SESSION['cart']);
-$placeholders = implode(',', array_fill(0, count($ids), '?'));
-$stmt = $pdo->prepare("SELECT * FROM products WHERE id IN ($placeholders)");
-$stmt->execute($ids);
-$products = $stmt->fetchAll();
+$items = get_cart_items($pdo);
 
-if (count($products) === 0) {
-    $_SESSION['cart'] = [];
+if (count($items) === 0) {
     header('Location: cart.php');
     exit;
 }
 
-$total = 0;
-foreach ($products as $p) {
-    $total += $p['price'] * $_SESSION['cart'][$p['id']];
-}
+$total = array_sum(array_column($items, 'subtotal'));
 
 $error = '';
 
@@ -60,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $order_id = (int) $pdo->lastInsertId();
 
             $stmt = $pdo->prepare(
-                'INSERT INTO order_items (order_id, product_id, qty, price) VALUES (?, ?, ?, ?)'
+                'INSERT INTO order_items (order_id, product_id, qty, price, options) VALUES (?, ?, ?, ?, ?)'
             );
-            foreach ($products as $p) {
-                $stmt->execute([$order_id, $p['id'], $_SESSION['cart'][$p['id']], $p['price']]);
+            foreach ($items as $item) {
+                $stmt->execute([$order_id, $item['id'], $item['qty'], $item['price'], $item['option']]);
             }
 
             $pdo->commit();
@@ -99,7 +91,7 @@ require 'includes/header.php';
         <input type="text" name="phone" value="<?= e($_POST['phone'] ?? '') ?>" required>
 
         <label>Catatan (opsional)</label>
-        <textarea name="note" rows="3" placeholder="Contoh: less sugar"><?= e($_POST['note'] ?? '') ?></textarea>
+        <textarea name="note" rows="3" placeholder="Contoh: tanpa sedotan"><?= e($_POST['note'] ?? '') ?></textarea>
 
         <label>Metode Pembayaran</label>
         <?php foreach ($methods as $key => $label): ?>
@@ -115,10 +107,10 @@ require 'includes/header.php';
 
     <div class="box">
         <h3>Ringkasan Pesanan</h3>
-        <?php foreach ($products as $p): ?>
+        <?php foreach ($items as $item): ?>
             <p class="row">
-                <span><?= e($p['name']) ?> x<?= $_SESSION['cart'][$p['id']] ?></span>
-                <span><?= rupiah($p['price'] * $_SESSION['cart'][$p['id']]) ?></span>
+                <span><?= e($item['name']) ?> (<?= e($item['option']) ?>) x<?= $item['qty'] ?></span>
+                <span><?= rupiah($item['subtotal']) ?></span>
             </p>
         <?php endforeach; ?>
         <hr>

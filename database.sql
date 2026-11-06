@@ -14,7 +14,8 @@ CREATE TABLE products (
     description VARCHAR(255),
     price INT NOT NULL,              -- harga dalam rupiah
     image VARCHAR(100) NOT NULL,     -- nama file di folder images/
-    category VARCHAR(20) NOT NULL    -- 'iced' atau 'hot'
+    category VARCHAR(20) NOT NULL,   -- 'iced' atau 'hot'
+    details TEXT                     -- penjelasan lengkap, tampil di halaman detail
 );
 
 -- Satu baris = satu pesanan
@@ -36,6 +37,7 @@ CREATE TABLE order_items (
     product_id INT NOT NULL,
     qty INT NOT NULL,
     price INT NOT NULL,
+    options VARCHAR(100),            -- pilihan pembeli, contoh: 'Less Sugar' atau 'Panas Banget'
     FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
@@ -46,6 +48,7 @@ CREATE TABLE reviews (
     product_id INT NOT NULL,
     rating TINYINT NOT NULL,         -- 1 sampai 5
     comment VARCHAR(500),
+    show_name TINYINT(1) NOT NULL DEFAULT 0,   -- 1 = nama ditampilkan, 0 = nama disensor
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY one_review_per_item (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders(id),
@@ -61,12 +64,12 @@ CREATE TABLE messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO products (name, description, price, image, category) VALUES
-('Es Kopi Susu Sera', 'Espresso, susu segar, dan gula aren. Menu andalan kami.', 22000, 'es-kopi-susu.jpg', 'iced'),
-('Iced Caramel Latte', 'Latte dingin dengan lapisan karamel manis.', 25000, 'kopi-vertikal.jpg', 'iced'),
-('Iced Latte', 'Espresso dan susu dingin yang berlapis cantik.', 24000, 'iced-latte.jpeg', 'iced'),
-('Hot Cappuccino', 'Espresso dengan susu steam dan foam tebal.', 24000, 'cappuccino.jpeg', 'hot'),
-('Hot Latte', 'Susu steam lembut dengan latte art.', 24000, 'latte-art.jpeg', 'hot'),
-('Kopi Hitam', 'Kopi hitam tanpa susu, pekat dan harum.', 15000, 'kopi-hitam.jpeg', 'hot'),
-('Hot Mocha', 'Hangat dan manis, dengan whipped cream dan saus karamel.', 26000, 'mocha-whipped.jpeg', 'hot'),
-('Coffee To Go', 'Kopi hangat dalam cup, praktis dibawa ke mana saja.', 20000, 'kopi-cup.jpeg', 'hot');
+INSERT INTO products (name, description, price, image, category, details) VALUES
+('Es Kopi Susu Sera', 'Espresso, susu segar, dan gula aren. Menu andalan kami.', 22000, 'es-kopi-susu.jpg', 'iced', 'Perpaduan espresso dari biji kopi pilihan, susu segar, dan gula aren yang manis legit. Disajikan dingin dengan es batu, cocok menemani pagi atau siang yang panas. Rasanya creamy, manis karamel, dengan aftertaste kopi yang halus.'),
+('Iced Caramel Latte', 'Latte dingin dengan lapisan karamel manis.', 25000, 'kopi-vertikal.jpg', 'iced', 'Espresso dan susu dingin dengan lapisan saus karamel di atasnya. Manis, lembut, dan tidak terlalu pahit. Aduk dulu sebelum diminum supaya rasa karamelnya merata.'),
+('Iced Latte', 'Espresso dan susu dingin yang berlapis cantik.', 24000, 'iced-latte.jpeg', 'iced', 'Espresso dan susu segar yang dituang berlapis, jadi tampilannya cantik sebelum diaduk. Rasanya lembut dan creamy, dengan kopi yang tetap terasa.'),
+('Hot Cappuccino', 'Espresso dengan susu steam dan foam tebal.', 24000, 'cappuccino.jpeg', 'hot', 'Satu shot espresso dengan susu yang di-steam dan foam tebal di atasnya, ditaburi bubuk kayu manis. Hangat, ringan, dan wangi.'),
+('Hot Latte', 'Susu steam lembut dengan latte art.', 24000, 'latte-art.jpeg', 'hot', 'Espresso dengan susu steam yang lembut dan latte art di atasnya. Pas untuk kamu yang suka kopi hangat yang tidak terlalu kuat.'),
+('Kopi Hitam', 'Kopi hitam tanpa susu, pekat dan harum.', 15000, 'kopi-hitam.jpeg', 'hot', 'Kopi hitam tanpa susu dan tanpa gula. Rasanya pekat dengan aroma yang kuat, cocok untuk penikmat kopi sejati.'),
+('Hot Mocha', 'Hangat dan manis, dengan whipped cream dan saus karamel.', 26000, 'mocha-whipped.jpeg', 'hot', 'Kopi, cokelat, dan susu hangat dengan whipped cream dan saus karamel di atasnya. Manis dan nyaman, cocok untuk sore yang santai.'),
+('Coffee To Go', 'Kopi hangat dalam cup, praktis dibawa ke mana saja.', 20000, 'kopi-cup.jpeg', 'hot', 'Kopi hangat dalam cup yang praktis dibawa ke mana saja. Pas untuk kamu yang lagi buru-buru tapi tetap butuh kopi.');

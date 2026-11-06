@@ -22,7 +22,7 @@ $instruksi = [
 ];
 
 $stmt = $pdo->prepare(
-    'SELECT products.id AS product_id, products.name, order_items.qty, order_items.price
+    'SELECT products.id AS product_id, products.name, order_items.qty, order_items.price, order_items.options
      FROM order_items
      JOIN products ON products.id = order_items.product_id
      WHERE order_items.order_id = ?'
@@ -30,16 +30,21 @@ $stmt = $pdo->prepare(
 $stmt->execute([$id]);
 $items = $stmt->fetchAll();
 
+$ordered = [];
+foreach ($items as $item) {
+    $ordered[$item['product_id']] = $item['name'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ratings  = (array) ($_POST['rating'] ?? []);
     $comments = (array) ($_POST['comment'] ?? []);
+    $show_name = (($_POST['show_name'] ?? '0') === '1') ? 1 : 0;
 
     $stmt = $pdo->prepare(
-        'INSERT IGNORE INTO reviews (order_id, product_id, rating, comment) VALUES (?, ?, ?, ?)'
+        'INSERT IGNORE INTO reviews (order_id, product_id, rating, comment, show_name) VALUES (?, ?, ?, ?, ?)'
     );
 
-    foreach ($items as $item) {
-        $pid     = $item['product_id'];
+    foreach ($ordered as $pid => $product_name) {
         $rating  = (int) ($ratings[$pid] ?? 0);
         $comment = $comments[$pid] ?? '';
 
@@ -48,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($rating >= 1 && $rating <= 5) {
-            $stmt->execute([$id, $pid, $rating, mb_substr(trim($comment), 0, 500)]);
+            $stmt->execute([$id, $pid, $rating, mb_substr(trim($comment), 0, 500), $show_name]);
         }
     }
 
@@ -56,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$stmt = $pdo->prepare('SELECT product_id, rating, comment FROM reviews WHERE order_id = ?');
+$stmt = $pdo->prepare('SELECT product_id, rating, comment, show_name FROM reviews WHERE order_id = ?');
 $stmt->execute([$id]);
 $reviewed = [];
 foreach ($stmt->fetchAll() as $r) {
@@ -73,7 +78,7 @@ require 'includes/header.php';
     <div class="box">
         <?php foreach ($items as $item): ?>
             <p class="row">
-                <span><?= e($item['name']) ?> x<?= $item['qty'] ?></span>
+                <span><?= e($item['name']) ?> (<?= e($item['options']) ?>) x<?= $item['qty'] ?></span>
                 <span><?= rupiah($item['price'] * $item['qty']) ?></span>
             </p>
         <?php endforeach; ?>
@@ -96,14 +101,14 @@ require 'includes/header.php';
 
         <form method="post" class="form">
             <?php $belum = 0; ?>
-            <?php foreach ($items as $item): ?>
-                <?php $pid = $item['product_id']; ?>
+            <?php foreach ($ordered as $pid => $product_name): ?>
                 <div class="review-item">
-                    <p class="review-name"><?= e($item['name']) ?></p>
+                    <p class="review-name"><?= e($product_name) ?></p>
 
                     <?php if (isset($reviewed[$pid])): ?>
                         <p class="rating"><span class="stars"><?= stars($reviewed[$pid]['rating']) ?></span></p>
                         <p><?= e($reviewed[$pid]['comment']) ?></p>
+                        <p class="hint">Tampil sebagai: <?= e(review_name($order['customer_name'], $reviewed[$pid]['show_name'])) ?></p>
                     <?php else: ?>
                         <?php $belum++; ?>
                         <div class="star-input">
@@ -119,6 +124,17 @@ require 'includes/header.php';
             <?php endforeach; ?>
 
             <?php if ($belum > 0): ?>
+                <fieldset class="name-choice">
+                    <legend>Nama yang tampil di ulasan</legend>
+                    <label class="check">
+                        <input type="radio" name="show_name" value="0" checked>
+                        <span>Sensor namaku: <strong><?= e(mask_name($order['customer_name'])) ?></strong></span>
+                    </label>
+                    <label class="check">
+                        <input type="radio" name="show_name" value="1">
+                        <span>Tampilkan namaku: <strong><?= e($order['customer_name']) ?></strong></span>
+                    </label>
+                </fieldset>
                 <button type="submit" class="btn small">Kirim Ulasan</button>
             <?php endif; ?>
         </form>

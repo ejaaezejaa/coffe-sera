@@ -33,7 +33,7 @@ require 'includes/header.php';
 <section class="stats">
     <div><strong><?= (int) $total_menu ?></strong><span>Menu</span></div>
     <div><strong>1</strong><span>Outlet</span></div>
-    <div><strong>08-22</strong><span>Jam buka</span></div>
+    <div><strong>09 - 14 WIB</strong><span>Jam buka</span></div>
 </section>
 
 <section class="section">
@@ -43,7 +43,7 @@ require 'includes/header.php';
             <div class="card">
                 <img src="images/<?= e($p['image']) ?>" alt="<?= e($p['name']) ?>">
                 <div class="card-body">
-                    <h3><?= e($p['name']) ?></h3>
+                    <h3><a href="product.php?id=<?= $p['id'] ?>" class="card-link"><?= e($p['name']) ?></a></h3>
                     <p class="desc"><?= e($p['description']) ?></p>
                     <p class="price"><?= rupiah($p['price']) ?></p>
                     <?= rating_line($p['avg_rating'], $p['review_count']) ?>

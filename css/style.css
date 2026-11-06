@@ -16,6 +16,9 @@
 
 body {
     margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     font-family: 'Poppins', sans-serif;
     color: var(--espresso);
     line-height: 1.6;
@@ -23,6 +26,11 @@ body {
     background-color: var(--cream);
     background-image: radial-gradient(rgba(198, 139, 89, 0.15) 1.5px, transparent 1.5px);
     background-size: 26px 26px;
+}
+
+/* Isi halaman mengambil semua sisa ruang, jadi footer terdorong ke bawah */
+main {
+    flex: 1 0 auto;
 }
 
 img {
@@ -254,13 +262,25 @@ h1, h2, h3 {
     width: 100%;
     height: 210px;
     object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* Kartu satu baris tingginya sama. Deskripsi mengisi ruang kosong, jadi harga,
+   rating, dan tombol selalu rata di bagian bawah kartu. */
+.card {
+    display: flex;
+    flex-direction: column;
 }
 
 .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: 16px;
 }
 
 .desc {
+    flex: 1;
     font-size: 14px;
 }
 
@@ -526,17 +546,399 @@ h1, h2, h3 {
     margin: 4px 0;
 }
 
-/* ===== HP / layar kecil ===== */
+/* ===== Kartu menu bisa diklik =====
+   Link di judul diperluas (::after) sampai menutupi seluruh kartu. Tombol diberi z-index
+   supaya tetap bisa diklik sendiri. */
+.card {
+    position: relative;
+}
+
+.card-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+.card form {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== Halaman detail produk ===== */
+.product {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.product-photo {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(43, 26, 16, 0.18);
+}
+
+.product-info h1 {
+    margin: 10px 0 4px;
+    font-size: 34px;
+}
+
+.product-price {
+    margin: 8px 0 14px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--caramel);
+}
+
+.tag {
+    display: inline-block;
+    padding: 2px 14px;
+    border-radius: 20px;
+    background: var(--latte);
+    color: var(--mocha);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.buy-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+/* Pilihan gula / panas: tombol bulat, yang dipilih berwarna coklat */
+.options {
+    margin: 18px 0 0;
+    padding: 0;
+    border: none;
+}
+
+.options legend {
+    padding: 0;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--mocha);
+}
+
+.chip {
+    display: inline-block;
+    margin: 0 6px 8px 0;
+    cursor: pointer;
+}
+
+.chip input {
+    position: absolute;
+    opacity: 0;
+}
+
+.chip span {
+    display: inline-block;
+    padding: 8px 20px;
+    border: 2px solid var(--latte);
+    border-radius: 30px;
+    background: var(--foam);
+    color: var(--mocha);
+    font-weight: 500;
+}
+
+.chip:hover span {
+    border-color: var(--caramel);
+    transform: translateY(-2px);
+}
+
+.chip input:checked + span {
+    border-color: var(--mocha);
+    background: var(--mocha);
+    color: var(--foam);
+}
+
+.chip input:focus-visible + span {
+    outline: 2px solid var(--caramel);
+    outline-offset: 2px;
+}
+
+.option {
+    color: var(--caramel);
+    font-weight: 600;
+}
+
+.name-choice {
+    margin: 4px 0 12px;
+    padding: 10px 14px;
+    border: 2px solid var(--latte);
+    border-radius: 14px;
+}
+
+.name-choice legend {
+    padding: 0 6px;
+    font-weight: 600;
+    color: var(--mocha);
+}
+
+/* ===== Tombol jumlah: [ - 1 + ] ===== */
+.stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid var(--latte);
+    border-radius: 30px;
+    background: var(--foam);
+    overflow: hidden;
+}
+
+.stepper button {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: none;
+    color: var(--mocha);
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.stepper button:hover {
+    background: var(--latte);
+}
+
+.stepper button:active {
+    background: var(--caramel);
+    color: var(--foam);
+}
+
+.stepper input {
+    width: 48px;
+    border: none;
+    background: none;
+    text-align: center;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--espresso);
+    -moz-appearance: textfield;
+}
+
+/* Sembunyikan panah kecil bawaan browser, karena sudah ada tombol + dan - */
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ===== Keranjang ===== */
+.cart-product {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.cart-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Checkbox "tampilkan namaku" */
+.check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.check input {
+    margin-top: 5px;
+}
+
+/* ===== Tombol menu (hamburger), hanya muncul di HP ===== */
+.menu-toggle {
+    display: none;
+    width: 46px;
+    height: 42px;
+    border: 2px solid var(--caramel);
+    border-radius: 12px;
+    background: none;
+    color: var(--mocha);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.menu-toggle:hover {
+    background: var(--caramel);
+    color: var(--foam);
+}
+
+/* ===== Animasi =====
+   Semua elemen yang bisa disentuh berubah pelan-pelan (0.25 detik), bukan langsung. */
+a, button, input, textarea, .card, .card img, .chip span {
+    transition: color 0.25s, background-color 0.25s, border-color 0.25s,
+                box-shadow 0.25s, transform 0.25s;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(43, 26, 16, 0.25);
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: none;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 26px rgba(43, 26, 16, 0.2);
+}
+
+.card:hover img {
+    transform: scale(1.06);
+}
+
+.filters a:hover {
+    transform: translateY(-2px);
+}
+
+/* Muncul pelan dari bawah saat halaman dibuka.
+   "backwards" artinya animasi tidak mengunci posisi akhir, jadi efek hover tetap jalan. */
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section,
+.stats {
+    animation: fade-up 0.6s ease backwards;
+}
+
+.card,
+.box {
+    animation: fade-up 0.5s ease backwards;
+}
+
+.grid .card:nth-child(2) { animation-delay: 0.08s; }
+.grid .card:nth-child(3) { animation-delay: 0.16s; }
+.grid .card:nth-child(4) { animation-delay: 0.24s; }
+.grid .card:nth-child(5) { animation-delay: 0.32s; }
+.grid .card:nth-child(6) { animation-delay: 0.4s; }
+
+/* Kalau pengguna mematikan animasi di pengaturan HP/laptopnya, ikuti */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ===== Tablet dan HP (lebar layar maks 760px) ===== */
 @media (max-width: 760px) {
+    .menu-toggle { display: block; }
+
     .navbar { padding: 8px 16px; }
-    .navbar nav { gap: 14px; font-size: 14px; }
+
+    /* Menu navigasi tertutup, terbuka saat tombol hamburger ditekan */
+    .navbar nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+    }
+
+    .navbar.open nav { max-height: 420px; }
+
+    .navbar nav a {
+        padding: 12px 4px;
+        border-bottom: 1px solid var(--latte);
+    }
+
+    .section { padding: 28px 18px; }
 
     .hero { height: 460px; margin: 16px; }
     .hero-content h1 { font-size: 28px; }
     .hero-logo { height: 80px; }
     .arrow { width: 38px; height: 38px; font-size: 22px; }
 
-    .stats { gap: 30px; }
-    .split { grid-template-columns: 1fr; }
-    .table { font-size: 14px; }
+    .stats { gap: 30px; flex-wrap: wrap; }
+
+    .split,
+    .product { grid-template-columns: 1fr; gap: 24px; }
+
+    .product-info h1 { font-size: 26px; }
+    .map { height: 260px; }
+}
+
+/* ===== HP (lebar layar maks 600px) ===== */
+@media (max-width: 600px) {
+    /* Menu tampil 2 kolom, seperti aplikasi belanja */
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .card img { height: 140px; }
+    .card-body { padding: 10px; }
+    .card h3 { font-size: 15px; }
+    .desc { display: none; }
+    .card h3 { flex: 1; }
+    .price { font-size: 15px; }
+    .rating { font-size: 12px; }
+
+    .filters { flex-wrap: wrap; }
+
+    /* Tabel keranjang berubah jadi kartu per menu */
+    .cart-table { background: none; }
+    .cart-table thead { display: none; }
+
+    .cart-table,
+    .cart-table tbody,
+    .cart-table tr,
+    .cart-table td { display: block; width: 100%; }
+
+    .cart-table tr {
+        margin-bottom: 14px;
+        padding: 12px;
+        border-radius: 16px;
+        background: var(--foam);
+    }
+
+    .cart-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+    }
+
+    .cart-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--mocha);
+    }
+
+    .cart-actions .btn { flex: 1; text-align: center; }
+    .buy-row .btn { flex: 1; text-align: center; }
 }

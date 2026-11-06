@@ -17,3 +17,10 @@ Setelah memesan, pembeli bisa memberi rating 1-5 dan masukan di halaman pesanan.
 ## Catatan
 Pembayaran masih simulasi (pesanan disimpan di database dengan status `pending`).
 Untuk pembayaran asli perlu payment gateway seperti Midtrans.
+
+## Fitur tambahan
+- `product.php`: halaman detail menu (klik kartu di Menu atau Home). Penjelasan lengkap ada di kolom `details` tabel `products`.
+- Tombol jumlah `[ - 1 + ]` di halaman detail dan di keranjang (di keranjang, jumlah langsung tersimpan saat ditekan).
+- Saat memberi ulasan, pembeli memilih menampilkan atau menyensor nama (contoh: `I***l A****i`).
+- Di halaman detail, pembeli memilih tingkat gula (menu Iced) atau tingkat panas (menu Hot). Pilihan ikut tersimpan di pesanan.
+- Favicon: `favicon.ico` dan `images/favicon.png`.

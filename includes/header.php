@@ -18,6 +18,9 @@ $menu_links = [
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/favicon.png?v=<?= filemtime(__DIR__ . '/../images/favicon.png') ?>">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
 </head>
 <body>
@@ -26,6 +29,8 @@ $menu_links = [
     <a href="index.php" class="logo">
         <img src="images/logo.png" alt="Sera Coffee">
     </a>
+
+    <button type="button" class="menu-toggle" aria-label="Buka menu">&#9776;</button>
 
     <nav>
         <?php foreach ($menu_links as $key => $link): ?>
