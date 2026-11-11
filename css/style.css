@@ -723,12 +723,14 @@ h1, h2, h3 {
     font-weight: 600;
     color: var(--espresso);
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 /* Sembunyikan panah kecil bawaan browser, karena sudah ada tombol + dan - */
 .stepper input::-webkit-outer-spin-button,
 .stepper input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    appearance: none;
     margin: 0;
 }
 
@@ -941,4 +943,58 @@ a, button, input, textarea, .card, .card img, .chip span {
 
     .cart-actions .btn { flex: 1; text-align: center; }
     .buy-row .btn { flex: 1; text-align: center; }
+}
+
+/* ===== Kadar gula & nilai gizi ===== */
+.nutrition {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.nutrition .box {
+    margin: 0;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-table th,
+.info-table td {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--latte);
+    text-align: left;
+}
+
+.info-table th:not(:first-child),
+.info-table td:not(:first-child) {
+    text-align: right;
+}
+
+.info-table tr:last-child td {
+    border-bottom: none;
+}
+
+.note {
+    margin: 10px 0 0;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* Tabel lebar boleh digeser ke samping di layar sempit */
+.table-scroll {
+    overflow-x: auto;
+}
+
+.info-table th {
+    font-weight: 600;
+    color: var(--mocha);
+}
+
+@media (max-width: 600px) {
+    .info-table {
+        font-size: 13px;
+    }
 }

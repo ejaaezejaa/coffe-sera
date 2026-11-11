@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = mb_substr($name, 0, 100);
         $note = mb_substr($note, 0, 255);
 
+        $order_id = 0;
+
         try {
             $pdo->beginTransaction();
 
