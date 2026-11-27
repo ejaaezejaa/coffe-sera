@@ -42,12 +42,7 @@ require 'includes/header.php';
                     <p class="desc"><?= e($p['description']) ?></p>
                     <p class="price"><?= rupiah($p['price']) ?></p>
                     <?= rating_line($p['avg_rating'], $p['review_count']) ?>
-
-                    <form method="post" action="cart.php">
-                        <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                        <button type="submit" class="btn small">+ Keranjang</button>
-                    </form>
+                    <p class="card-cta">Pilih &amp; pesan &rarr;</p>
                 </div>
             </div>
         <?php endforeach; ?>

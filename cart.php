@@ -1,5 +1,9 @@
 <?php
 require 'config.php';
+
+// Halaman ini tidak disimpan browser, jadi tombol Back tidak menampilkan keranjang yang sudah basi
+header('Cache-Control: no-store');
+
 $title  = 'Cart';
 $active = 'cart';
 
@@ -24,14 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $p = $stmt->fetch();
 
         if ($p) {
-            $choices = product_options($p['category'])['choices'];
-            $code    = is_string($_POST['option'] ?? null) ? $_POST['option'] : '';
+            $posted = is_array($_POST['option'] ?? null) ? $_POST['option'] : [];
+            $codes  = [];
 
-            if (!isset($choices[$code])) {
-                $code = array_key_first($choices);
+            foreach (product_options($p['category']) as $group) {
+                $code = $posted[$group['key']] ?? '';
+
+                if (!is_string($code) || !isset($group['choices'][$code])) {
+                    $code = array_key_first($group['choices']);
+                }
+
+                $codes[] = $code;
             }
 
-            $key = $id . '_' . $code;
+            $key = $id . '_' . implode('_', $codes);
             $qty = max(1, min(99, (int) ($_POST['qty'] ?? 1)));
             $_SESSION['cart'][$key] = min(($_SESSION['cart'][$key] ?? 0) + $qty, 99);
         }

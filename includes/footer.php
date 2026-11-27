@@ -33,5 +33,7 @@ document.querySelector('.menu-toggle').addEventListener('click', function () {
 });
 </script>
 
+<script src="js/password-toggle.js"></script>
+
 </body>
 </html>

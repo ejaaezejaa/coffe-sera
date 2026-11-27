@@ -56,15 +56,17 @@ require 'includes/header.php';
                 <input type="hidden" name="id" value="<?= $product['id'] ?>">
                 <input type="hidden" name="from" value="product">
 
-                <fieldset class="options">
-                    <legend><?= e($options['label']) ?></legend>
-                    <?php foreach ($options['choices'] as $code => $label): ?>
-                        <label class="chip">
-                            <input type="radio" name="option" value="<?= $code ?>" <?= $code === array_key_first($options['choices']) ? 'checked' : '' ?>>
-                            <span><?= e($label) ?></span>
-                        </label>
-                    <?php endforeach; ?>
-                </fieldset>
+                <?php foreach ($options as $group): ?>
+                    <fieldset class="options">
+                        <legend><?= e($group['label']) ?></legend>
+                        <?php foreach ($group['choices'] as $code => $label): ?>
+                            <label class="chip">
+                                <input type="radio" name="option[<?= $group['key'] ?>]" value="<?= $code ?>" <?= $code === array_key_first($group['choices']) ? 'checked' : '' ?>>
+                                <span><?= e($label) ?></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </fieldset>
+                <?php endforeach; ?>
 
                 <div class="buy-row">
                     <div class="stepper">
@@ -85,77 +87,61 @@ require 'includes/header.php';
     <h2>Kadar Gula &amp; Nilai Gizi</h2>
 
     <div class="nutrition">
-        <?php if ($product['category'] === 'iced'): ?>
-            <div class="box">
-                <h3>Nilai gizi per porsi, menurut level gula</h3>
+        <div class="box">
+            <h3>Nilai gizi per porsi, menurut level gula</h3>
 
-                <div class="table-scroll">
-                    <table class="info-table">
-                        <tr>
-                            <th></th>
-                            <?php foreach ($options['choices'] as $label): ?>
-                                <th><?= e($label) ?></th>
-                            <?php endforeach; ?>
-                        </tr>
-
-                        <tr>
-                            <td>Gula tambahan (g)</td>
-                            <?php foreach ($options['choices'] as $code => $label): ?>
-                                <td><?= $sugar_grams[$code] ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                        <tr>
-                            <td>Kalori (kkal)</td>
-                            <?php foreach ($options['choices'] as $code => $label): ?>
-                                <td><?= $product['calories'] - ($product['sugar_normal'] - $sugar_grams[$code]) * 4 ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                        <tr>
-                            <td>Karbohidrat (g)</td>
-                            <?php foreach ($options['choices'] as $code => $label): ?>
-                                <td><?= $product['carbs'] - ($product['sugar_normal'] - $sugar_grams[$code]) ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                        <tr>
-                            <td>Lemak (g)</td>
-                            <?php foreach ($options['choices'] as $label): ?>
-                                <td><?= number_format($product['fat'], 1, ',', '.') ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                        <tr>
-                            <td>Protein (g)</td>
-                            <?php foreach ($options['choices'] as $label): ?>
-                                <td><?= number_format($product['protein'], 1, ',', '.') ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                        <tr>
-                            <td>Kafein (mg)</td>
-                            <?php foreach ($options['choices'] as $label): ?>
-                                <td><?= $product['caffeine'] ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                    </table>
-                </div>
-
-                <p class="note">
-                    Kalori dan karbohidrat tiap level dihitung dari selisih gulanya (1 gram gula kira-kira 4 kkal).
-                    Lemak, protein, dan kafein sama di semua level. Angka ini perkiraan dan bisa berbeda sedikit tergantung racikan.
-                </p>
-            </div>
-        <?php else: ?>
-            <div class="box">
-                <h3>Nilai gizi per porsi</h3>
+            <div class="table-scroll">
                 <table class="info-table">
-                    <tr><td>Gula tambahan (g)</td><td><?= $product['sugar_normal'] ?></td></tr>
-                    <tr><td>Kalori (kkal)</td><td><?= $product['calories'] ?></td></tr>
-                    <tr><td>Karbohidrat (g)</td><td><?= $product['carbs'] ?></td></tr>
-                    <tr><td>Lemak (g)</td><td><?= number_format($product['fat'], 1, ',', '.') ?></td></tr>
-                    <tr><td>Protein (g)</td><td><?= number_format($product['protein'], 1, ',', '.') ?></td></tr>
-                    <tr><td>Kafein (mg)</td><td><?= $product['caffeine'] ?></td></tr>
+                    <tr>
+                        <th></th>
+                        <?php foreach (sugar_choices() as $label): ?>
+                            <th><?= e($label) ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <td>Gula tambahan (g)</td>
+                        <?php foreach (sugar_choices() as $code => $label): ?>
+                            <td><?= $sugar_grams[$code] ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <td>Kalori (kkal)</td>
+                        <?php foreach (sugar_choices() as $code => $label): ?>
+                            <td><?= $product['calories'] - ($product['sugar_normal'] - $sugar_grams[$code]) * 4 ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <td>Karbohidrat (g)</td>
+                        <?php foreach (sugar_choices() as $code => $label): ?>
+                            <td><?= $product['carbs'] - ($product['sugar_normal'] - $sugar_grams[$code]) ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <td>Lemak (g)</td>
+                        <?php foreach (sugar_choices() as $code => $label): ?>
+                            <td><?= number_format($product['fat'], 1, ',', '.') ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <td>Protein (g)</td>
+                        <?php foreach (sugar_choices() as $code => $label): ?>
+                            <td><?= number_format($product['protein'], 1, ',', '.') ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <td>Kafein (mg)</td>
+                        <?php foreach (sugar_choices() as $code => $label): ?>
+                            <td><?= $product['caffeine'] ?></td>
+                        <?php endforeach; ?>
+                    </tr>
                 </table>
-                <p class="note">Angka ini perkiraan dan bisa berbeda sedikit tergantung racikan.</p>
             </div>
-        <?php endif; ?>
+
+            <p class="note">
+                Kalori dan karbohidrat tiap level dihitung dari selisih gulanya (1 gram gula kira-kira 4 kkal).
+                Lemak, protein, dan kafein sama di semua level. Angka ini perkiraan dan bisa berbeda sedikit tergantung racikan.
+            </p>
+        </div>
     </div>
 </section>
 <?php endif; ?>
