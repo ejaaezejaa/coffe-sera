@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS sera_coffee CHARACTER SET utf8mb4;
 USE sera_coffee;
 
+DROP TABLE IF EXISTS password_resets;
+DROP TABLE IF EXISTS promos;
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
@@ -92,3 +94,71 @@ UPDATE products SET sugar_normal = 10, sugar_less = 5, calories = 165, fat = 6.5
 UPDATE products SET sugar_normal = 0, sugar_less = 0, calories = 5, fat = 0.0, carbs = 1, protein = 0.3, caffeine = 95 WHERE name = 'Kopi Hitam';
 UPDATE products SET sugar_normal = 24, sugar_less = 12, calories = 280, fat = 12.0, carbs = 40, protein = 7.0, caffeine = 80 WHERE name = 'Hot Mocha';
 UPDATE products SET sugar_normal = 8, sugar_less = 4, calories = 130, fat = 5.0, carbs = 15, protein = 5.0, caffeine = 80 WHERE name = 'Coffee To Go';
+
+-- Akun admin untuk halaman /admin
+-- Login awal: username admin, password admin123
+-- Saat login pertama, password WAJIB diganti dulu (kolom must_change = 1).
+DROP TABLE IF EXISTS admins;
+CREATE TABLE admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    must_change TINYINT(1) NOT NULL DEFAULT 1
+);
+
+INSERT INTO admins (username, password_hash) VALUES ('admin', '$2y$10$A56AfMT6pNWB3yHATFZ.eePHj4phHl1w8XU7Cz6aYf0aY9kRANJFq');
+
+-- Kopi Hitam sekarang juga punya pilihan gula, jadi level Normal = 8 g (kalori dan karbohidrat ikut menyesuaikan)
+UPDATE products SET sugar_normal = 8, sugar_less = 4, calories = 37, carbs = 9,
+    details = 'Kopi hitam tanpa susu, rasanya pekat dengan aroma yang kuat. Pilih sendiri tingkat gulanya, dari Normal sampai No Sugar.'
+WHERE name = 'Kopi Hitam';
+
+-- Akun pembeli (login pakai nomor HP + password)
+DROP TABLE IF EXISTS customers;
+CREATE TABLE customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Pesanan yang dibuat saat login tercatat atas akun itu (kosong kalau pembeli tidak login)
+ALTER TABLE orders
+    ADD COLUMN customer_id INT NULL,
+    ADD CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL;
+
+-- ===== Fitur baru: lupa password dan kode promo =====
+-- (Kalau database kamu sudah berisi pesanan, jangan import file ini lagi. Pakai update-v5.sql saja.)
+
+-- Permintaan reset password. Satu pembeli hanya punya satu permintaan aktif.
+-- code_hash kosong = admin belum membuat kode. Kodenya sendiri tidak disimpan, hanya hash-nya.
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    code_hash VARCHAR(255) NULL,
+    expires_at DATETIME NULL,
+    attempts TINYINT NOT NULL DEFAULT 0,      -- berapa kali pembeli salah memasukkan kode
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY one_request_per_customer (customer_id),
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+-- Kode promo. percent = persen diskon, max_discount = batas diskon (rupiah), min_total = minimal belanja (rupiah)
+CREATE TABLE promos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(30) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL,
+    percent TINYINT NOT NULL,
+    max_discount INT NOT NULL DEFAULT 0,      -- 0 = tanpa batas
+    min_total INT NOT NULL DEFAULT 0,
+    active TINYINT(1) NOT NULL DEFAULT 1
+);
+
+INSERT INTO promos (code, description, percent, max_discount, min_total) VALUES
+('SERA10', 'Diskon 10% untuk pesanan berikutnya. Terima kasih sudah jajan di Sera Coffee!', 10, 10000, 30000);
+
+-- Pesanan mencatat kode promo yang dipakai dan besar diskonnya (total sudah dikurangi diskon)
+ALTER TABLE orders
+    ADD COLUMN promo_code VARCHAR(30) NULL,
+    ADD COLUMN discount INT NOT NULL DEFAULT 0;
