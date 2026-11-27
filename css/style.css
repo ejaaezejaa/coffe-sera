@@ -803,15 +803,6 @@ a, button, input, textarea, .card, .card img, .chip span {
     box-shadow: none;
 }
 
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 26px rgba(43, 26, 16, 0.2);
-}
-
-.card:hover img {
-    transform: scale(1.06);
-}
-
 .filters a:hover {
     transform: translateY(-2px);
 }
@@ -997,4 +988,400 @@ a, button, input, textarea, .card, .card img, .chip span {
     .info-table {
         font-size: 13px;
     }
+}
+
+/* ===== Struk pembayaran ===== */
+.receipt {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 26px 24px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(43, 26, 16, 0.15);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.receipt .row {
+    margin: 4px 0;
+}
+
+.receipt-head {
+    text-align: center;
+    margin-bottom: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.receipt-logo {
+    height: 60px;
+    margin: 0 auto 6px;
+}
+
+.receipt-item {
+    margin-bottom: 8px;
+}
+
+.receipt-item small {
+    opacity: 0.7;
+}
+
+.receipt-total {
+    font-size: 17px;
+}
+
+.receipt-thanks {
+    margin: 6px 0 0;
+    text-align: center;
+}
+
+.dashed {
+    margin: 12px 0;
+    border: none;
+    border-top: 2px dashed var(--latte);
+}
+
+.receipt-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Saat dicetak: sembunyikan navbar, footer, dan tombol */
+@media print {
+    .navbar,
+    .footer,
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .receipt {
+        box-shadow: none;
+    }
+}
+
+/* Ajakan klik di kartu menu (pengganti tombol + Keranjang) */
+.card-cta {
+    margin: 10px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--caramel);
+}
+
+/* ===== Halaman bayar QRIS ===== */
+.qris-box {
+    padding: 28px 24px;
+    border-radius: 20px;
+    background: var(--foam);
+    box-shadow: 0 8px 24px rgba(43, 26, 16, 0.15);
+    text-align: center;
+}
+
+.qris-total {
+    margin: 16px 0;
+    padding: 12px;
+    border-radius: 14px;
+    background: var(--latte);
+}
+
+.qris-total strong {
+    display: block;
+    font-size: 30px;
+    color: var(--mocha);
+}
+
+.qris-image {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 12px;
+    border: 4px solid #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(43, 26, 16, 0.15);
+}
+
+.qris-steps {
+    margin: 18px 0;
+    padding-left: 22px;
+    text-align: left;
+}
+
+.qris-steps li {
+    margin-bottom: 6px;
+}
+
+.qris-actions {
+    margin-top: 18px;
+}
+
+/* ===== Kolom password: tampilannya sama dengan kolom username ===== */
+.form input[type=password] {
+    padding: 11px;
+    border: 2px solid var(--latte);
+    border-radius: 12px;
+    background: var(--foam);
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.form input[type=password]:focus {
+    outline: none;
+    border-color: var(--caramel);
+}
+
+/* Tombol Lihat / Sembunyikan di dalam kolom password */
+.password-wrap {
+    position: relative;
+}
+
+.form .password-wrap input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    display: flex;
+    padding: 6px;
+    border: none;
+    background: none;
+    color: var(--mocha);
+    cursor: pointer;
+}
+
+/* Dua ikon: mata (password tersembunyi) dan mata dicoret (password terlihat) */
+.toggle-password .icon-eye-off {
+    display: none;
+}
+
+.toggle-password.showing .icon-eye {
+    display: none;
+}
+
+.toggle-password.showing .icon-eye-off {
+    display: block;
+}
+
+/* ===== Ikon user di navbar ===== */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 24px;
+    color: var(--mocha);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.nav-user:hover,
+.nav-user.active {
+    color: var(--caramel);
+}
+
+/* Sudah login: ikon diberi lingkaran dan nama depan */
+.nav-user.logged {
+    background: var(--latte);
+}
+
+/* ===== Halaman login, daftar ===== */
+.auth-box {
+    width: 100%;
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 28px;
+    border-radius: 20px;
+    background: var(--foam);
+    box-shadow: 0 8px 24px rgba(43, 26, 16, 0.15);
+}
+
+.auth-box h1 {
+    text-align: center;
+    font-size: 26px;
+}
+
+.auth-box > p {
+    text-align: center;
+}
+
+/* ===== Halaman akun: kotak form ===== */
+.form.box {
+    margin-bottom: 18px;
+}
+
+/* ===== Tim kami (halaman About) ===== */
+.team {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.member {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 16px;
+    background: var(--foam);
+    box-shadow: 0 4px 14px rgba(43, 26, 16, 0.1);
+}
+
+.avatar {
+    display: flex;
+    flex: 0 0 44px;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--mocha);
+    color: var(--foam);
+    font-weight: 700;
+}
+
+/* ===== Animasi loading (cangkir kopi) ===== */
+.loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: var(--cream);
+    transition: opacity 0.4s, visibility 0.4s;
+}
+
+/* Setelah halaman selesai dimuat, loading memudar lalu hilang */
+.loader.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader p {
+    margin: 0;
+    color: var(--mocha);
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.loader-cup {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+
+.cup {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    width: 64px;
+    height: 46px;
+    border-radius: 0 0 30px 30px;
+    background: var(--mocha);
+    animation: cup-bounce 1.2s ease-in-out infinite;
+}
+
+.handle {
+    position: absolute;
+    top: 8px;
+    right: -18px;
+    width: 20px;
+    height: 22px;
+    border: 5px solid var(--mocha);
+    border-left: none;
+    border-radius: 0 14px 14px 0;
+}
+
+/* Tiga uap yang naik bergantian */
+.steam {
+    position: absolute;
+    bottom: 52px;
+    width: 6px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--caramel);
+    opacity: 0;
+    animation: steam-rise 1.5s ease-in-out infinite;
+}
+
+.steam.s1 { left: 22px; }
+.steam.s2 { left: 38px; animation-delay: 0.35s; }
+.steam.s3 { left: 54px; animation-delay: 0.7s; }
+
+@keyframes steam-rise {
+    0%   { opacity: 0; transform: translateY(10px) scaleY(0.6); }
+    40%  { opacity: 0.9; }
+    100% { opacity: 0; transform: translateY(-14px) scaleY(1.1); }
+}
+
+@keyframes cup-bounce {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+}
+
+@media print {
+    .loader {
+        display: none !important;
+    }
+}
+
+/* ===== Navbar di HP: logo, ikon user, lalu tombol menu di baris pertama ===== */
+@media (max-width: 760px) {
+    .logo { order: 1; }
+    .nav-user { order: 2; margin-left: auto; }
+    .menu-toggle { order: 3; }
+    .navbar nav { order: 4; }
+
+    .nav-user .name {
+        display: none;
+    }
+
+    .auth-box {
+        margin: 20px auto;
+        padding: 22px;
+    }
+
+    .form input,
+    .form select,
+    .form textarea {
+        font-size: 16px;
+    }
+}
+
+/* ===== Promo di halaman pesanan berhasil ===== */
+.promo-box {
+    border: 2px dashed var(--caramel);
+    text-align: center;
+}
+
+.promo-code {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 8px 20px;
+    border-radius: 10px;
+    background: var(--cream);
+    color: var(--mocha);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
+/* Kolom kode promo + tombol Cek kode */
+.promo-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.promo-field input {
+    flex: 1;
 }
